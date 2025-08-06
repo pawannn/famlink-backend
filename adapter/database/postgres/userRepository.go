@@ -2,8 +2,11 @@ package database
 
 import (
 	"database/sql"
+	"errors"
+	"strings"
 
 	domain "github.com/pawannn/famlink/domain/users"
+	"github.com/pawannn/famlink/pkg/constants"
 )
 
 type UserRepo struct {
@@ -18,6 +21,9 @@ func (uR UserRepo) Register(name string, phone string, country string) (*domain.
 	row := uR.db.QueryRow("INSERT INTO users(name, phone, country) VALUES($1, $2, $3) RETURNING id, name, phone, country, COALESCE(avatar, '')", name, phone, country)
 	var UserDetails domain.UserSchema
 	if err := row.Scan(&UserDetails.ID, &UserDetails.Name, &UserDetails.Phone, &UserDetails.Country, &UserDetails.Avatar); err != nil {
+		if strings.Contains(err.Error(), "duplicate") {
+			return nil, errors.New(constants.ERR_USER_EXIST)
+		}
 		return nil, err
 	}
 	return &UserDetails, nil
