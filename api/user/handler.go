@@ -10,9 +10,6 @@ import (
 	"github.com/pawannn/famlink/pkg/constants"
 )
 
-func (u *User) VerifyPhone(c *gin.Context) {
-}
-
 func (u *User) RegisterUser(c *gin.Context) {
 	var userDetails domain.UserSchema
 	if err := c.BindJSON(&userDetails); err != nil {
