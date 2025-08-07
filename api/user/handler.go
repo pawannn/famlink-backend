@@ -17,7 +17,7 @@ import (
 func (u *User) ValidatePhone(c *gin.Context) {
 	var userDetails domain.UserSchema
 	if err := c.BindJSON(&userDetails); err != nil {
-		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_BODY, nil)
+		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_BODY, err.Error())
 		return
 	}
 	countryCode := strings.ToUpper(strings.TrimSpace(userDetails.Country))
@@ -27,7 +27,7 @@ func (u *User) ValidatePhone(c *gin.Context) {
 	}
 	parsedPhone, err := phonenumbers.Parse(userDetails.Phone, countryCode)
 	if err != nil || !phonenumbers.IsValidNumber(parsedPhone) {
-		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_PHONE, nil)
+		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_PHONE, err.Error())
 		return
 	}
 	formattedPhone := phonenumbers.Format(parsedPhone, phonenumbers.E164)
@@ -39,7 +39,7 @@ func (u *User) ValidatePhone(c *gin.Context) {
 func (u *User) VerifyPhone(c *gin.Context) {
 	var payload domain.VerifyPhonePayload
 	if err := c.BindJSON(&payload); err != nil {
-		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_BODY, nil)
+		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_BODY, err.Error())
 		return
 	}
 
@@ -51,7 +51,7 @@ func (u *User) VerifyPhone(c *gin.Context) {
 
 	parsedPhone, err := phonenumbers.Parse(payload.Phone, countryCode)
 	if err != nil || !phonenumbers.IsValidNumber(parsedPhone) {
-		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_PHONE, nil)
+		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_PHONE, err.Error())
 		return
 	}
 
@@ -63,9 +63,8 @@ func (u *User) VerifyPhone(c *gin.Context) {
 	}
 	formattedPhone := phonenumbers.Format(parsedPhone, phonenumbers.E164)
 	user, err := u.UserRepo.GetUserByPhone(formattedPhone)
-	fmt.Println(err)
 	if err != nil {
-		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err)
+		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err.Error())
 		return
 	}
 
@@ -85,13 +84,13 @@ func (u *User) VerifyPhone(c *gin.Context) {
 				api.SendResponse(c, http.StatusConflict, constants.ERR_USER_EXIST, nil)
 				return
 			}
-			api.SendResponse(c, http.StatusInternalServerError, "Unable to register user", err)
+			api.SendResponse(c, http.StatusInternalServerError, "Unable to register user", err.Error())
 			return
 		}
 	}
 	token, err := u.FE.TokenService.GenerateJWT(user.ID)
 	if err != nil {
-		api.SendResponse(c, http.StatusInternalServerError, "Failed to generate token", nil)
+		api.SendResponse(c, http.StatusInternalServerError, "Failed to generate token", err.Error())
 		return
 	}
 	response := domain.VerifyPhoneResponse{
@@ -111,7 +110,7 @@ func (u *User) UpdateUser(c *gin.Context) {
 	username := c.PostForm("username")
 	_, fileErr := c.FormFile("avatar")
 	if strings.TrimSpace(username) == "" && fileErr != nil {
-		api.SendResponse(c, http.StatusBadRequest, "No field to update", nil)
+		api.SendResponse(c, http.StatusBadRequest, "No field to update", fileErr.Error())
 		return
 	}
 	var name *string
@@ -133,7 +132,6 @@ func (u *User) UpdateUser(c *gin.Context) {
 }
 
 func (u *User) GetUser(c *gin.Context) {
-	fmt.Println("GetUser")
 	userCtx, ok := middleware.GetUserContext(c.Request.Context())
 	if !ok {
 		api.SendResponse(c, http.StatusUnauthorized, "unable to get userID", nil)
@@ -142,7 +140,7 @@ func (u *User) GetUser(c *gin.Context) {
 	userID := userCtx.User_id
 	user, err := u.UserRepo.GetUserByID(userID)
 	if err != nil {
-		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err)
+		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err.Error())
 		return
 	}
 	if user == nil {
