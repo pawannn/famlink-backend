@@ -1,7 +1,8 @@
 package domain
 
 type UserService interface {
-	Register(name string, phone string, country string) (*UserSchema, error)
-	GetUser(phone string) (*UserSchema, error)
-	UpdateUser(user *UserSchema) (*UserSchema, error)
+	Register(UserSchema) (*UserSchema, error)
+	GetUserByID(id string) (*UserSchema, error)
+	UpdateUser(id string, name *string, avatar *string) (*UserSchema, error)
+	GetUserByPhone(phone string) (*UserSchema, error)
 }

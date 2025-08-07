@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	token "github.com/pawannn/famlink/adapter/token/jwt"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
 )
 
@@ -17,12 +18,13 @@ type FamLinkRoute struct {
 }
 
 type FamLinkEngine struct {
-	config appconfig.Config
-	Router *gin.Engine
-	DB     *sql.DB
+	config       appconfig.Config
+	Router       *gin.Engine
+	DB           *sql.DB
+	TokenService token.TokenRepo
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB) *FamLinkEngine {
+func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS token.TokenRepo) *FamLinkEngine {
 	g := gin.Default()
 	fE := FamLinkEngine{
 		config: c,
@@ -34,21 +36,17 @@ func InitFamLinkEngine(c appconfig.Config, DB *sql.DB) *FamLinkEngine {
 func (fE *FamLinkEngine) AddRoute(routes []FamLinkRoute) {
 	for _, route := range routes {
 		fmt.Printf("%s : %s : %s\n", route.Method, route.Route, route.Description)
+		handlers := append(route.Middleware, route.Controller)
 		switch route.Method {
 		case "GET":
-			handlers := append(route.Middleware, route.Controller)
 			fE.Router.GET(route.Route, handlers...)
 		case "POST":
-			handlers := append(route.Middleware, route.Controller)
 			fE.Router.POST(route.Route, handlers...)
 		case "PUT":
-			handlers := append(route.Middleware, route.Controller)
 			fE.Router.PUT(route.Route, handlers...)
 		case "DELETE":
-			handlers := append(route.Middleware, route.Controller)
 			fE.Router.DELETE(route.Route, handlers...)
 		case "PATCH":
-			handlers := append(route.Middleware, route.Controller)
 			fE.Router.PATCH(route.Route, handlers...)
 		default:
 			fmt.Printf("Unsupported method %s for route %s\n", route.Method, route.Route)
