@@ -12,23 +12,31 @@ import (
 )
 
 func main() {
+	// Load Env
 	var c appconfig.Config
 	appconfig.LoadConfig(&c)
 
+	// Initialize Database
 	db, err := database.InitDatabase(c)
 	if err != nil {
 		log.Fatal("Unable to connect to database", err)
 	}
 	defer db.Close()
 
+	// Initialize token service
 	ts := token.InitTokenService(c)
 	tokenRepo := port.InitTokenRepo(ts)
 
+	// Initialize the HTPP engine
 	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo)
 
+	// Initialize the user Repo
 	userRepo := database.NewUserRepository(db)
 	userRoutes := user.InitUserService(*famLinkEngine, userRepo)
+
+	// Add User Routes
 	userRoutes.InitUserRoutes()
 
+	// Start the server
 	famLinkEngine.StartServer()
 }
