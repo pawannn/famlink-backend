@@ -28,13 +28,13 @@ func InitCacheRepo(c appconfig.Config) metadb.MetaDBService {
 	return cR
 }
 
-func (cR CacheRepo) Set(key string, value interface{}) error {
+func (cR CacheRepo) Set(key string, value interface{}, expiry time.Duration) error {
 	ctx := context.Background()
 	data, err := json.Marshal(value)
 	if err != nil {
 		return err
 	}
-	cmd := cR.Client.Set(ctx, key, data, time.Minute*10)
+	cmd := cR.Client.Set(ctx, key, data, expiry)
 	return cmd.Err()
 }
 

@@ -2,6 +2,7 @@ package cache
 
 import (
 	"encoding/json"
+	"time"
 
 	domain "github.com/pawannn/famlink/core/domain/users"
 	metadb "github.com/pawannn/famlink/core/services/metaDB"
@@ -18,7 +19,7 @@ func InitUserCacheRepo(rds metadb.MetaDBService) metadb.UserCacheService {
 }
 
 func (uC UserMetaDBRepo) SetUser(userID string, userDetails domain.UserSchema) error {
-	return uC.rds.Set(userID, userDetails)
+	return uC.rds.Set(userID, userDetails, time.Minute*10)
 }
 
 func (uC UserMetaDBRepo) GetUser(userID string) (*domain.UserSchema, error) {
