@@ -1,12 +1,12 @@
-package pkg
+package httpEngine
 
 import (
 	"database/sql"
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	token "github.com/pawannn/famlink/adapter/token/jwt"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
+	port "github.com/pawannn/famlink/port/token"
 )
 
 type FamLinkRoute struct {
@@ -18,13 +18,13 @@ type FamLinkRoute struct {
 }
 
 type FamLinkEngine struct {
-	config       appconfig.Config
-	Router       *gin.Engine
-	DB           *sql.DB
-	TokenService token.TokenRepo
+	config appconfig.Config
+	Router *gin.Engine
+	DB     *sql.DB
+	Token  *port.TokenRepo
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS token.TokenRepo) *FamLinkEngine {
+func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenRepo) *FamLinkEngine {
 	g := gin.Default()
 	fE := FamLinkEngine{
 		config: c,

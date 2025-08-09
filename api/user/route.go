@@ -2,18 +2,18 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	domain "github.com/pawannn/famlink/domain/users"
+	domain "github.com/pawannn/famlink/core/domain/users"
 	"github.com/pawannn/famlink/middleware"
-	"github.com/pawannn/famlink/pkg"
-	port "github.com/pawannn/famlink/port/repository"
+	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
+	port "github.com/pawannn/famlink/port/database"
 )
 
 type User struct {
-	FE       pkg.FamLinkEngine
+	FE       httpEngine.FamLinkEngine
 	UserRepo *port.UserRepository
 }
 
-func InitUserService(fE pkg.FamLinkEngine, userService domain.UserService) *User {
+func InitUserService(fE httpEngine.FamLinkEngine, userService domain.UserService) *User {
 	userRepo := port.InitUserService(userService)
 	return &User{
 		FE:       fE,
@@ -22,7 +22,7 @@ func InitUserService(fE pkg.FamLinkEngine, userService domain.UserService) *User
 }
 
 func (u *User) InitUserRoutes() {
-	u.FE.AddRoute([]pkg.FamLinkRoute{
+	u.FE.AddRoute([]httpEngine.FamLinkRoute{
 		{
 			Route:       "/user/phone/validate",
 			Method:      "POST",
@@ -43,7 +43,7 @@ func (u *User) InitUserRoutes() {
 			Controller:  u.UpdateUser,
 			Description: "This endpoint updates the username of the user",
 			Middleware: []gin.HandlerFunc{
-				middleware.Auth(u.FE.TokenService),
+				middleware.Auth(u.FE.Token),
 			},
 		},
 		{
@@ -52,7 +52,7 @@ func (u *User) InitUserRoutes() {
 			Controller:  u.GetUser,
 			Description: "This endpint gets the user details",
 			Middleware: []gin.HandlerFunc{
-				middleware.Auth(u.FE.TokenService),
+				middleware.Auth(u.FE.Token),
 			},
 		},
 	})

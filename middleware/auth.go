@@ -4,11 +4,11 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	token "github.com/pawannn/famlink/adapter/token/jwt"
 	"github.com/pawannn/famlink/api"
+	port "github.com/pawannn/famlink/port/token"
 )
 
-func Auth(tokenService token.TokenRepo) gin.HandlerFunc {
+func Auth(tokenService *port.TokenRepo) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authToken := c.GetHeader("Authorization")
 		if authToken == "" {
@@ -16,13 +16,13 @@ func Auth(tokenService token.TokenRepo) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		claims, err := tokenService.ValidateJWT(authToken)
+		userID, err := tokenService.ParseToken(authToken)
 		if err != nil {
 			api.SendResponse(c, http.StatusBadGateway, "Invalid or expired token", nil)
 			c.Abort()
 			return
 		}
-		userCtx := UserContext{User_id: claims.UserID}
+		userCtx := UserContext{User_id: userID}
 		ctx := AttachContext(c.Request.Context(), userCtx)
 		c.Request = c.Request.WithContext(ctx)
 

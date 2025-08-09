@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
+	"github.com/pawannn/famlink/core/services"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
 )
 
@@ -17,13 +18,13 @@ type claims struct {
 	jwt.RegisteredClaims
 }
 
-func InitTokenService(c appconfig.Config) TokenRepo {
+func InitTokenService(c appconfig.Config) services.TokenService {
 	return TokenRepo{
 		Secret: c.Token_secret,
 	}
 }
 
-func (tr TokenRepo) GenerateJWT(userID string) (string, error) {
+func (tr TokenRepo) GenerateToken(userID string) (string, error) {
 	claims := claims{
 		UserID: userID,
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -34,15 +35,15 @@ func (tr TokenRepo) GenerateJWT(userID string) (string, error) {
 	return token.SignedString([]byte(tr.Secret))
 }
 
-func (tr TokenRepo) ValidateJWT(tokenStr string) (*claims, error) {
+func (tr TokenRepo) ParseToken(tokenStr string) (string, error) {
 	token, err := jwt.ParseWithClaims(tokenStr, &claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(tr.Secret), nil
 	})
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	if claims, ok := token.Claims.(*claims); ok && token.Valid {
-		return claims, nil
+		return claims.UserID, nil
 	}
-	return nil, errors.New("invalid or expired token")
+	return "", errors.New("invalid or expired token")
 }

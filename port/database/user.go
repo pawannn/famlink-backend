@@ -1,6 +1,6 @@
 package port
 
-import domain "github.com/pawannn/famlink/domain/users"
+import domain "github.com/pawannn/famlink/core/domain/users"
 
 type UserRepository struct {
 	Repo domain.UserService

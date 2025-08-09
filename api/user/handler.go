@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nyaruka/phonenumbers"
 	"github.com/pawannn/famlink/api"
-	domain "github.com/pawannn/famlink/domain/users"
+	domain "github.com/pawannn/famlink/core/domain/users"
 	"github.com/pawannn/famlink/middleware"
 	"github.com/pawannn/famlink/pkg/constants"
 	"github.com/pawannn/famlink/pkg/helpers"
@@ -88,7 +88,7 @@ func (u *User) VerifyPhone(c *gin.Context) {
 			return
 		}
 	}
-	token, err := u.FE.TokenService.GenerateJWT(user.ID)
+	token, err := u.FE.Token.GenerateToken(user.ID)
 	if err != nil {
 		api.SendResponse(c, http.StatusInternalServerError, "Failed to generate token", err.Error())
 		return

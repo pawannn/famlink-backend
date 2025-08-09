@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	domain "github.com/pawannn/famlink/domain/users"
+	domain "github.com/pawannn/famlink/core/domain/users"
 	"github.com/pawannn/famlink/pkg/constants"
 )
 
