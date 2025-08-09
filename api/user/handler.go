@@ -128,7 +128,7 @@ func (u *User) UpdateUser(c *gin.Context) {
 		api.SendResponse(c, http.StatusInternalServerError, "Unable to updated user details", err.Error())
 		return
 	}
-	err = u.UserCacheRepo.SetUser(userID, *user)
+	err = u.UserCacheRepo.SaveUser(userID, *user)
 	if err != nil {
 		fmt.Printf("unable to set data to cache: %s\n", err.Error())
 	}
@@ -159,7 +159,7 @@ func (u *User) GetUser(c *gin.Context) {
 		api.SendResponse(c, http.StatusNotFound, "User is not registered", nil)
 		return
 	}
-	err = u.UserCacheRepo.SetUser(userID, *user)
+	err = u.UserCacheRepo.SaveUser(userID, *user)
 	if err != nil {
 		fmt.Printf("unable to set data to cache: %s\n", err.Error())
 	}

@@ -1,22 +1,22 @@
-package port
+package token
 
 import tokenService "github.com/pawannn/famlink/core/services/token"
 
-type TokenRepo struct {
+type TokenPort struct {
 	repo tokenService.TokenService
 }
 
-func InitTokenRepo(repo tokenService.TokenService) *TokenRepo {
-	tR := TokenRepo{
+func InitTokenPort(repo tokenService.TokenService) *TokenPort {
+	tR := TokenPort{
 		repo: repo,
 	}
 	return &tR
 }
 
-func (tR TokenRepo) GenerateUserToken(userID string) (string, error) {
+func (tR TokenPort) GenerateUserToken(userID string) (string, error) {
 	return tR.repo.GenerateToken(userID)
 }
 
-func (tR TokenRepo) ParseUserToken(token string) (string, error) {
+func (tR TokenPort) ParseUserToken(token string) (string, error) {
 	return tR.repo.ParseToken(token)
 }

@@ -1,4 +1,4 @@
-package cache
+package metadb
 
 import (
 	"context"

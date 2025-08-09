@@ -8,7 +8,7 @@ import (
 	port "github.com/pawannn/famlink/port/token"
 )
 
-func Auth(tokenService *port.TokenRepo) gin.HandlerFunc {
+func Auth(tokenService *port.TokenPort) gin.HandlerFunc {
 	return func(c *gin.Context) {
 		authToken := c.GetHeader("Authorization")
 		if authToken == "" {

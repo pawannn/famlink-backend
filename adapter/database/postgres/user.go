@@ -10,15 +10,15 @@ import (
 	"github.com/pawannn/famlink/pkg/constants"
 )
 
-type UserRepo struct {
+type UserDBRepo struct {
 	db *sql.DB
 }
 
-func NewUserRepository(db *sql.DB) domain.UserService {
-	return UserRepo{db: db}
+func NewUserDBRepository(db *sql.DB) domain.UserService {
+	return UserDBRepo{db: db}
 }
 
-func (uR UserRepo) Register(user domain.UserSchema) (*domain.UserSchema, error) {
+func (uR UserDBRepo) Register(user domain.UserSchema) (*domain.UserSchema, error) {
 	row := uR.db.QueryRow("INSERT INTO users(id, name, phone, country) VALUES($1, $2, $3, $4) RETURNING id, name, phone, country, COALESCE(avatar, '')", user.ID, user.Name, user.Phone, user.Country)
 	var UserDetails domain.UserSchema
 	if err := row.Scan(&UserDetails.ID, &UserDetails.Name, &UserDetails.Phone, &UserDetails.Country, &UserDetails.Avatar); err != nil {
@@ -30,7 +30,7 @@ func (uR UserRepo) Register(user domain.UserSchema) (*domain.UserSchema, error) 
 	return &UserDetails, nil
 }
 
-func (uR UserRepo) UpdateUser(id string, name *string, avatar *string) (*domain.UserSchema, error) {
+func (uR UserDBRepo) UpdateUser(id string, name *string, avatar *string) (*domain.UserSchema, error) {
 	query := strings.Builder{}
 	query.WriteString("UPDATE users SET ")
 	params := []any{}
@@ -63,7 +63,7 @@ func (uR UserRepo) UpdateUser(id string, name *string, avatar *string) (*domain.
 	return &user, nil
 }
 
-func (uR UserRepo) GetUserByID(id string) (*domain.UserSchema, error) {
+func (uR UserDBRepo) GetUserByID(id string) (*domain.UserSchema, error) {
 	row := uR.db.QueryRow("SELECT id, name, phone, country, COALESCE(avatar, '') FROM users WHERE id = $1", id)
 	var UserDetails domain.UserSchema
 	if err := row.Scan(&UserDetails.ID, &UserDetails.Name, &UserDetails.Phone, &UserDetails.Country, &UserDetails.Avatar); err != nil {
@@ -75,7 +75,7 @@ func (uR UserRepo) GetUserByID(id string) (*domain.UserSchema, error) {
 	return &UserDetails, nil
 }
 
-func (uR UserRepo) GetUserByPhone(phone string) (*domain.UserSchema, error) {
+func (uR UserDBRepo) GetUserByPhone(phone string) (*domain.UserSchema, error) {
 	row := uR.db.QueryRow("SELECT id, name, phone, country, COALESCE(avatar, '') FROM users WHERE phone = $1", phone)
 	var UserDetails domain.UserSchema
 	if err := row.Scan(&UserDetails.ID, &UserDetails.Name, &UserDetails.Phone, &UserDetails.Country, &UserDetails.Avatar); err != nil {

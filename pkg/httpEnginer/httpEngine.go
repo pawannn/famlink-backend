@@ -22,11 +22,11 @@ type FamLinkEngine struct {
 	config appconfig.Config
 	Router *gin.Engine
 	DB     *sql.DB
-	Token  *port.TokenRepo
+	Token  *port.TokenPort
 	MetaDB metadb.MetaDBService
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenRepo, mDb metadb.MetaDBService) *FamLinkEngine {
+func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenPort, mDb metadb.MetaDBService) *FamLinkEngine {
 	g := gin.Default()
 	fE := FamLinkEngine{
 		config: c,

@@ -5,25 +5,25 @@ import (
 	metadb "github.com/pawannn/famlink/core/services/metaDB"
 )
 
-type UserCacheRepo struct {
+type UserCachePort struct {
 	Repo metadb.UserCacheService
 }
 
-func InitUserCacheRepo(repo metadb.UserCacheService) UserCacheRepo {
-	ucR := UserCacheRepo{
+func InitUserCachePort(repo metadb.UserCacheService) UserCachePort {
+	ucR := UserCachePort{
 		Repo: repo,
 	}
 	return ucR
 }
 
-func (ucR UserCacheRepo) GetUser(userID string) (*domain.UserSchema, error) {
+func (ucR UserCachePort) GetUser(userID string) (*domain.UserSchema, error) {
 	return ucR.Repo.GetUser(userID)
 }
 
-func (ucR UserCacheRepo) SetUser(userID string, userDetails domain.UserSchema) error {
-	return ucR.Repo.SetUser(userID, userDetails)
+func (ucR UserCachePort) SaveUser(userID string, userDetails domain.UserSchema) error {
+	return ucR.Repo.SaveUser(userID, userDetails)
 }
 
-func (ucR UserCacheRepo) DeleteUser(userID string) error {
+func (ucR UserCachePort) DeleteUser(userID string) error {
 	return ucR.Repo.DeleteUser(userID)
 }

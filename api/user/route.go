@@ -2,26 +2,32 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	CacheAdapter "github.com/pawannn/famlink/adapter/cache/redis"
-	domain "github.com/pawannn/famlink/core/domain/users"
-	metadb "github.com/pawannn/famlink/core/services/metaDB"
-	"github.com/pawannn/famlink/middleware"
+	DBAdapter "github.com/pawannn/famlink/adapter/database/postgres"
+	metadbAdapter "github.com/pawannn/famlink/adapter/metadb/redis"
+	middleware "github.com/pawannn/famlink/middleware"
 	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
-	port "github.com/pawannn/famlink/port/database"
+	databasePort "github.com/pawannn/famlink/port/database"
+	metadbPort "github.com/pawannn/famlink/port/metadb"
 )
 
 type User struct {
 	FE            httpEngine.FamLinkEngine
-	UserRepo      *port.UserRepository
-	UserCacheRepo metadb.UserCacheService
+	UserRepo      *databasePort.UserDBport
+	UserCacheRepo metadbPort.UserCachePort
 }
 
-func InitUserService(fE httpEngine.FamLinkEngine, userService domain.UserService) *User {
-	userRepo := port.InitUserService(userService)
-	userCacheRepo := CacheAdapter.InitUserCacheRepo(fE.MetaDB)
+func InitUserRepo(fE httpEngine.FamLinkEngine) *User {
+	// Initialize user Cache service
+	userCacheService := metadbAdapter.InitUserCacheRepo(fE.MetaDB)
+	userCacheRepo := metadbPort.InitUserCachePort(userCacheService)
+
+	// Initialize user DB service
+	userDBService := DBAdapter.NewUserDBRepository(fE.DB)
+	userDBRepo := databasePort.InitUserDBPort(userDBService)
+
 	return &User{
 		FE:            fE,
-		UserRepo:      userRepo,
+		UserRepo:      userDBRepo,
 		UserCacheRepo: userCacheRepo,
 	}
 }

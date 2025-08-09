@@ -1,27 +1,27 @@
-package port
+package database
 
 import domain "github.com/pawannn/famlink/core/domain/users"
 
-type UserRepository struct {
+type UserDBport struct {
 	Repo domain.UserService
 }
 
-func InitUserService(repo domain.UserService) *UserRepository {
-	return &UserRepository{Repo: repo}
+func InitUserDBPort(repo domain.UserService) *UserDBport {
+	return &UserDBport{Repo: repo}
 }
 
-func (uS *UserRepository) Register(user domain.UserSchema) (*domain.UserSchema, error) {
+func (uS *UserDBport) Register(user domain.UserSchema) (*domain.UserSchema, error) {
 	return uS.Repo.Register(user)
 }
 
-func (uS *UserRepository) GetUserByID(id string) (*domain.UserSchema, error) {
+func (uS *UserDBport) GetUserByID(id string) (*domain.UserSchema, error) {
 	return uS.Repo.GetUserByID(id)
 }
 
-func (uS *UserRepository) UpdateUser(id string, name *string, avatar *string) (*domain.UserSchema, error) {
+func (uS *UserDBport) UpdateUser(id string, name *string, avatar *string) (*domain.UserSchema, error) {
 	return uS.Repo.UpdateUser(id, name, avatar)
 }
 
-func (uS *UserRepository) GetUserByPhone(phone string) (*domain.UserSchema, error) {
+func (uS *UserDBport) GetUserByPhone(phone string) (*domain.UserSchema, error) {
 	return uS.Repo.GetUserByPhone(phone)
 }
