@@ -66,6 +66,10 @@ func (u *User) VerifyPhone(c *gin.Context) {
 	}
 	ok, err := u.UserSmsRepo.VerifyUserOTP(formattedPhone, payload.OTP)
 	if err != nil {
+		if strings.Contains(err.Error(), "20404") {
+			api.SendResponse(c, http.StatusNotFound, "OTP expired", err.Error())
+			return
+		}
 		api.SendResponse(c, http.StatusInternalServerError, "unable to verify OTP", err.Error())
 		return
 	}
