@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
+	metadb "github.com/pawannn/famlink/core/services/metaDB"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
 	port "github.com/pawannn/famlink/port/token"
 )
@@ -22,13 +23,17 @@ type FamLinkEngine struct {
 	Router *gin.Engine
 	DB     *sql.DB
 	Token  *port.TokenRepo
+	MetaDB metadb.MetaDBService
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenRepo) *FamLinkEngine {
+func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenRepo, mDb metadb.MetaDBService) *FamLinkEngine {
 	g := gin.Default()
 	fE := FamLinkEngine{
 		config: c,
 		Router: g,
+		MetaDB: mDb,
+		DB:     DB,
+		Token:  &tS,
 	}
 	return &fE
 }

@@ -1,6 +1,6 @@
 package port
 
-import tokenService "github.com/pawannn/famlink/core/services"
+import tokenService "github.com/pawannn/famlink/core/services/token"
 
 type TokenRepo struct {
 	repo tokenService.TokenService
@@ -13,10 +13,10 @@ func InitTokenRepo(repo tokenService.TokenService) *TokenRepo {
 	return &tR
 }
 
-func (tR TokenRepo) GenerateToken(userID string) (string, error) {
+func (tR TokenRepo) GenerateUserToken(userID string) (string, error) {
 	return tR.repo.GenerateToken(userID)
 }
 
-func (tR TokenRepo) ParseToken(token string) (string, error) {
+func (tR TokenRepo) ParseUserToken(token string) (string, error) {
 	return tR.repo.ParseToken(token)
 }

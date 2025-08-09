@@ -16,7 +16,7 @@ func Auth(tokenService *port.TokenRepo) gin.HandlerFunc {
 			c.Abort()
 			return
 		}
-		userID, err := tokenService.ParseToken(authToken)
+		userID, err := tokenService.ParseUserToken(authToken)
 		if err != nil {
 			api.SendResponse(c, http.StatusBadGateway, "Invalid or expired token", nil)
 			c.Abort()

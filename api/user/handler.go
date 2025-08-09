@@ -88,7 +88,7 @@ func (u *User) VerifyPhone(c *gin.Context) {
 			return
 		}
 	}
-	token, err := u.FE.Token.GenerateToken(user.ID)
+	token, err := u.FE.Token.GenerateUserToken(user.ID)
 	if err != nil {
 		api.SendResponse(c, http.StatusInternalServerError, "Failed to generate token", err.Error())
 		return
@@ -128,6 +128,10 @@ func (u *User) UpdateUser(c *gin.Context) {
 		api.SendResponse(c, http.StatusInternalServerError, "Unable to updated user details", err.Error())
 		return
 	}
+	err = u.UserCacheRepo.SetUser(userID, *user)
+	if err != nil {
+		fmt.Printf("unable to set data to cache: %s\n", err.Error())
+	}
 	api.SendResponse(c, http.StatusOK, "User details updated successfully", user)
 }
 
@@ -138,6 +142,14 @@ func (u *User) GetUser(c *gin.Context) {
 		return
 	}
 	userID := userCtx.User_id
+	userCache, err := u.UserCacheRepo.GetUser(userID)
+	if err != nil {
+		fmt.Printf("unable to get data from cache: %s\n", err.Error())
+	}
+	if userCache != nil {
+		api.SendResponse(c, http.StatusOK, "Successfully fetched user details", userCache)
+	}
+
 	user, err := u.UserRepo.GetUserByID(userID)
 	if err != nil {
 		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err.Error())
@@ -146,6 +158,10 @@ func (u *User) GetUser(c *gin.Context) {
 	if user == nil {
 		api.SendResponse(c, http.StatusNotFound, "User is not registered", nil)
 		return
+	}
+	err = u.UserCacheRepo.SetUser(userID, *user)
+	if err != nil {
+		fmt.Printf("unable to set data to cache: %s\n", err.Error())
 	}
 	api.SendResponse(c, http.StatusOK, "Successfully fetched user details", user)
 }

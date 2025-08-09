@@ -3,9 +3,10 @@ package main
 import (
 	"log"
 
+	cache "github.com/pawannn/famlink/adapter/cache/redis"
 	database "github.com/pawannn/famlink/adapter/database/postgres"
 	token "github.com/pawannn/famlink/adapter/token/jwt"
-	"github.com/pawannn/famlink/api/user"
+	userApi "github.com/pawannn/famlink/api/user"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
 	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
 	port "github.com/pawannn/famlink/port/token"
@@ -23,16 +24,19 @@ func main() {
 	}
 	defer db.Close()
 
+	// Intiialize MetaDB
+	rds := cache.InitCacheRepo(c)
+
 	// Initialize token service
 	ts := token.InitTokenService(c)
 	tokenRepo := port.InitTokenRepo(ts)
 
 	// Initialize the HTPP engine
-	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo)
+	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo, rds)
 
 	// Initialize the user Repo
 	userRepo := database.NewUserRepository(db)
-	userRoutes := user.InitUserService(*famLinkEngine, userRepo)
+	userRoutes := userApi.InitUserService(*famLinkEngine, userRepo)
 
 	// Add User Routes
 	userRoutes.InitUserRoutes()

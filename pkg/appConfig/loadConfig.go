@@ -14,6 +14,10 @@ type Config struct {
 	DB_user      string `env:"DB_USER"`
 	DB_pass      string `env:"DB_PASS"`
 	DB_SSL       string `env:"DB_SSL"`
+	MetaDB_Host  string `env:"METADB_HOST"`
+	MetaDB_Port  int64  `env:"METADB_PORT"`
+	MetaDB_Pass  string `env:"METADB_PASS"`
+	MetaDB_DB    int    `env:"METADB_DB"`
 	Token_secret string `env:"TOKEN_SECRET"`
 }
 

@@ -2,22 +2,27 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
+	CacheAdapter "github.com/pawannn/famlink/adapter/cache/redis"
 	domain "github.com/pawannn/famlink/core/domain/users"
+	metadb "github.com/pawannn/famlink/core/services/metaDB"
 	"github.com/pawannn/famlink/middleware"
 	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
 	port "github.com/pawannn/famlink/port/database"
 )
 
 type User struct {
-	FE       httpEngine.FamLinkEngine
-	UserRepo *port.UserRepository
+	FE            httpEngine.FamLinkEngine
+	UserRepo      *port.UserRepository
+	UserCacheRepo metadb.UserCacheService
 }
 
 func InitUserService(fE httpEngine.FamLinkEngine, userService domain.UserService) *User {
 	userRepo := port.InitUserService(userService)
+	userCacheRepo := CacheAdapter.InitUserCacheRepo(fE.MetaDB)
 	return &User{
-		FE:       fE,
-		UserRepo: userRepo,
+		FE:            fE,
+		UserRepo:      userRepo,
+		UserCacheRepo: userCacheRepo,
 	}
 }
 
