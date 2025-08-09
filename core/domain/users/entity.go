@@ -11,7 +11,7 @@ type UserSchema struct {
 type VerifyPhonePayload struct {
 	Phone   string `json:"phone"`
 	Country string `json:"country"`
-	OTP     int    `json:"otp"`
+	OTP     string `json:"otp"`
 }
 
 type VerifyPhoneResponse struct {

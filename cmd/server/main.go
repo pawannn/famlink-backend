@@ -5,6 +5,7 @@ import (
 
 	database "github.com/pawannn/famlink/adapter/database/postgres"
 	cache "github.com/pawannn/famlink/adapter/metadb/redis"
+	sms "github.com/pawannn/famlink/adapter/sms/twillo"
 	token "github.com/pawannn/famlink/adapter/token/jwt"
 	userApi "github.com/pawannn/famlink/api/user"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
@@ -31,8 +32,11 @@ func main() {
 	ts := token.InitTokenService(c)
 	tokenRepo := port.InitTokenPort(ts)
 
+	// Initialize sms service
+	sms := sms.InitTwilloClient(c)
+
 	// Initialize the HTPP engine
-	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo, rds)
+	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo, rds, sms)
 
 	// Initialize the user Repo
 	userRoutes := userApi.InitUserRepo(*famLinkEngine)

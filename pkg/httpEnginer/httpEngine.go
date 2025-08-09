@@ -6,8 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	metadb "github.com/pawannn/famlink/core/services/metaDB"
+	"github.com/pawannn/famlink/core/services/sms"
 	appconfig "github.com/pawannn/famlink/pkg/appConfig"
-	port "github.com/pawannn/famlink/port/token"
+	token "github.com/pawannn/famlink/port/token"
 )
 
 type FamLinkRoute struct {
@@ -22,11 +23,12 @@ type FamLinkEngine struct {
 	config appconfig.Config
 	Router *gin.Engine
 	DB     *sql.DB
-	Token  *port.TokenPort
+	Token  *token.TokenPort
 	MetaDB metadb.MetaDBService
+	Sms    sms.SmsService
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenPort, mDb metadb.MetaDBService) *FamLinkEngine {
+func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS token.TokenPort, mDb metadb.MetaDBService, sms sms.SmsService) *FamLinkEngine {
 	g := gin.Default()
 	fE := FamLinkEngine{
 		config: c,
@@ -34,6 +36,7 @@ func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS port.TokenPort, mDb me
 		MetaDB: mDb,
 		DB:     DB,
 		Token:  &tS,
+		Sms:    sms,
 	}
 	return &fE
 }

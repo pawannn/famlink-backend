@@ -32,7 +32,11 @@ func (u *User) ValidatePhone(c *gin.Context) {
 	}
 	formattedPhone := phonenumbers.Format(parsedPhone, phonenumbers.E164)
 	fmt.Println(formattedPhone)
-	// TODO: SEND OTP TO PHONE NUMBER
+	err = u.UserSmsRepo.SendUserOTP(formattedPhone)
+	if err != nil {
+		api.SendResponse(c, http.StatusInternalServerError, "unable to send OTP", err.Error())
+		return
+	}
 	api.SendResponse(c, http.StatusOK, "OTP sent to phone number", nil)
 }
 
@@ -54,17 +58,19 @@ func (u *User) VerifyPhone(c *gin.Context) {
 		api.SendResponse(c, http.StatusBadRequest, constants.ERR_INVALID_PHONE, err.Error())
 		return
 	}
-
-	// TODO: FETCH OPT AND VALIDATE
-	mockOtp := 12345
-	if payload.OTP != mockOtp {
-		api.SendResponse(c, http.StatusUnauthorized, "Invalid OTP", nil)
-		return
-	}
 	formattedPhone := phonenumbers.Format(parsedPhone, phonenumbers.E164)
 	user, err := u.UserRepo.GetUserByPhone(formattedPhone)
 	if err != nil {
 		api.SendResponse(c, http.StatusInternalServerError, constants.ERR_FETCH_USER, err.Error())
+		return
+	}
+	ok, err := u.UserSmsRepo.VerifyUserOTP(formattedPhone, payload.OTP)
+	if err != nil {
+		api.SendResponse(c, http.StatusInternalServerError, "unable to verify OTP", err.Error())
+		return
+	}
+	if !ok {
+		api.SendResponse(c, http.StatusUnauthorized, "Incorrect OTP", nil)
 		return
 	}
 

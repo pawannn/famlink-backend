@@ -4,16 +4,19 @@ import (
 	"github.com/gin-gonic/gin"
 	DBAdapter "github.com/pawannn/famlink/adapter/database/postgres"
 	metadbAdapter "github.com/pawannn/famlink/adapter/metadb/redis"
+	smsAdapter "github.com/pawannn/famlink/adapter/sms/twillo"
 	middleware "github.com/pawannn/famlink/middleware"
 	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
 	databasePort "github.com/pawannn/famlink/port/database"
 	metadbPort "github.com/pawannn/famlink/port/metadb"
+	"github.com/pawannn/famlink/port/sms"
 )
 
 type User struct {
 	FE            httpEngine.FamLinkEngine
 	UserRepo      *databasePort.UserDBport
 	UserCacheRepo metadbPort.UserCachePort
+	UserSmsRepo   sms.UserSmsPort
 }
 
 func InitUserRepo(fE httpEngine.FamLinkEngine) *User {
@@ -25,10 +28,15 @@ func InitUserRepo(fE httpEngine.FamLinkEngine) *User {
 	userDBService := DBAdapter.NewUserDBRepository(fE.DB)
 	userDBRepo := databasePort.InitUserDBPort(userDBService)
 
+	// Initialize sms service
+	UsersmsService := smsAdapter.InitUserSmsRepo(fE.Sms)
+	userSmsRepo := sms.InitUserSmsPort(UsersmsService)
+
 	return &User{
 		FE:            fE,
 		UserRepo:      userDBRepo,
 		UserCacheRepo: userCacheRepo,
+		UserSmsRepo:   userSmsRepo,
 	}
 }
 
