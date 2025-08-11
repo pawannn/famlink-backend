@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"time"
 
-	metadb "github.com/pawannn/famlink/core/services/metaDB"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
+	metadb "github.com/pawannn/famly/core/services/metaDB"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
 	"github.com/redis/go-redis/v9"
 )
 

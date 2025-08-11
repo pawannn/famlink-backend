@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	services "github.com/pawannn/famlink/core/services/token"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
+	services "github.com/pawannn/famly/core/services/token"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
 )
 
 type TokenRepo struct {

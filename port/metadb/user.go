@@ -1,8 +1,8 @@
 package metadb
 
 import (
-	domain "github.com/pawannn/famlink/core/domain/users"
-	metadb "github.com/pawannn/famlink/core/services/metaDB"
+	domain "github.com/pawannn/famly/core/domain/users"
+	metadb "github.com/pawannn/famly/core/services/metaDB"
 )
 
 type UserCachePort struct {

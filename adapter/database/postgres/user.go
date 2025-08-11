@@ -6,8 +6,8 @@ import (
 	"fmt"
 	"strings"
 
-	domain "github.com/pawannn/famlink/core/domain/users"
-	"github.com/pawannn/famlink/pkg/constants"
+	domain "github.com/pawannn/famly/core/domain/users"
+	"github.com/pawannn/famly/pkg/constants"
 )
 
 type UserDBRepo struct {

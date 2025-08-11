@@ -3,8 +3,8 @@ package sms
 import (
 	"fmt"
 
-	"github.com/pawannn/famlink/core/services/sms"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
+	"github.com/pawannn/famly/core/services/sms"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
 	"github.com/twilio/twilio-go"
 	verify "github.com/twilio/twilio-go/rest/verify/v2"
 )

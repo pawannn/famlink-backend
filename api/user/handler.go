@@ -7,11 +7,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/nyaruka/phonenumbers"
-	"github.com/pawannn/famlink/api"
-	domain "github.com/pawannn/famlink/core/domain/users"
-	"github.com/pawannn/famlink/middleware"
-	"github.com/pawannn/famlink/pkg/constants"
-	"github.com/pawannn/famlink/pkg/helpers"
+	"github.com/pawannn/famly/api"
+	domain "github.com/pawannn/famly/core/domain/users"
+	"github.com/pawannn/famly/middleware"
+	"github.com/pawannn/famly/pkg/constants"
+	"github.com/pawannn/famly/pkg/helpers"
 )
 
 func (u *User) ValidatePhone(c *gin.Context) {

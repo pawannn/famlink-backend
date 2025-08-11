@@ -1,6 +1,6 @@
 package database
 
-import domain "github.com/pawannn/famlink/core/domain/users"
+import domain "github.com/pawannn/famly/core/domain/users"
 
 type UserDBport struct {
 	Repo domain.UserService

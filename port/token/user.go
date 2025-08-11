@@ -1,6 +1,6 @@
 package token
 
-import tokenService "github.com/pawannn/famlink/core/services/token"
+import tokenService "github.com/pawannn/famly/core/services/token"
 
 type TokenPort struct {
 	repo tokenService.TokenService

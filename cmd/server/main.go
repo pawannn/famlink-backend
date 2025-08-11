@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	database "github.com/pawannn/famlink/adapter/database/postgres"
-	cache "github.com/pawannn/famlink/adapter/metadb/redis"
-	sms "github.com/pawannn/famlink/adapter/sms/twillo"
-	token "github.com/pawannn/famlink/adapter/token/jwt"
-	userApi "github.com/pawannn/famlink/api/user"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
-	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
-	port "github.com/pawannn/famlink/port/token"
+	database "github.com/pawannn/famly/adapter/database/postgres"
+	cache "github.com/pawannn/famly/adapter/metadb/redis"
+	sms "github.com/pawannn/famly/adapter/sms/twillo"
+	token "github.com/pawannn/famly/adapter/token/jwt"
+	userApi "github.com/pawannn/famly/api/user"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
+	httpEngine "github.com/pawannn/famly/pkg/httpEnginer"
+	port "github.com/pawannn/famly/port/token"
 )
 
 func main() {
@@ -36,14 +36,14 @@ func main() {
 	sms := sms.InitTwilloClient(c)
 
 	// Initialize the HTPP engine
-	famLinkEngine := httpEngine.InitFamLinkEngine(c, db, *tokenRepo, rds, sms)
+	famlyEngine := httpEngine.InitfamlyEngine(c, db, *tokenRepo, rds, sms)
 
 	// Initialize the user Repo
-	userRoutes := userApi.InitUserRepo(*famLinkEngine)
+	userRoutes := userApi.InitUserRepo(*famlyEngine)
 
 	// Add User Routes
 	userRoutes.InitUserRoutes()
 
 	// Start the server
-	famLinkEngine.StartServer()
+	famlyEngine.StartServer()
 }

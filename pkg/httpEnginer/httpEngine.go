@@ -5,13 +5,13 @@ import (
 	"fmt"
 
 	"github.com/gin-gonic/gin"
-	metadb "github.com/pawannn/famlink/core/services/metaDB"
-	"github.com/pawannn/famlink/core/services/sms"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
-	token "github.com/pawannn/famlink/port/token"
+	metadb "github.com/pawannn/famly/core/services/metaDB"
+	"github.com/pawannn/famly/core/services/sms"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
+	token "github.com/pawannn/famly/port/token"
 )
 
-type FamLinkRoute struct {
+type FamlyRoute struct {
 	Route       string
 	Method      string
 	Middleware  []gin.HandlerFunc
@@ -19,7 +19,7 @@ type FamLinkRoute struct {
 	Description string
 }
 
-type FamLinkEngine struct {
+type FamlyEngine struct {
 	config appconfig.Config
 	Router *gin.Engine
 	DB     *sql.DB
@@ -28,9 +28,9 @@ type FamLinkEngine struct {
 	Sms    sms.SmsService
 }
 
-func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS token.TokenPort, mDb metadb.MetaDBService, sms sms.SmsService) *FamLinkEngine {
+func InitfamlyEngine(c appconfig.Config, DB *sql.DB, tS token.TokenPort, mDb metadb.MetaDBService, sms sms.SmsService) *FamlyEngine {
 	g := gin.Default()
-	fE := FamLinkEngine{
+	fE := FamlyEngine{
 		config: c,
 		Router: g,
 		MetaDB: mDb,
@@ -41,7 +41,7 @@ func InitFamLinkEngine(c appconfig.Config, DB *sql.DB, tS token.TokenPort, mDb m
 	return &fE
 }
 
-func (fE *FamLinkEngine) AddRoute(routes []FamLinkRoute) {
+func (fE *FamlyEngine) AddRoute(routes []FamlyRoute) {
 	for _, route := range routes {
 		fmt.Printf("%s : %s : %s\n", route.Method, route.Route, route.Description)
 		handlers := append(route.Middleware, route.Controller)
@@ -62,7 +62,7 @@ func (fE *FamLinkEngine) AddRoute(routes []FamLinkRoute) {
 	}
 }
 
-func (fE *FamLinkEngine) StartServer() {
+func (fE *FamlyEngine) StartServer() {
 	addr := fmt.Sprintf(":%d", fE.config.App_port)
 	fE.Router.Run(addr)
 }

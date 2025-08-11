@@ -2,24 +2,24 @@ package user
 
 import (
 	"github.com/gin-gonic/gin"
-	DBAdapter "github.com/pawannn/famlink/adapter/database/postgres"
-	metadbAdapter "github.com/pawannn/famlink/adapter/metadb/redis"
-	smsAdapter "github.com/pawannn/famlink/adapter/sms/twillo"
-	middleware "github.com/pawannn/famlink/middleware"
-	httpEngine "github.com/pawannn/famlink/pkg/httpEnginer"
-	databasePort "github.com/pawannn/famlink/port/database"
-	metadbPort "github.com/pawannn/famlink/port/metadb"
-	"github.com/pawannn/famlink/port/sms"
+	DBAdapter "github.com/pawannn/famly/adapter/database/postgres"
+	metadbAdapter "github.com/pawannn/famly/adapter/metadb/redis"
+	smsAdapter "github.com/pawannn/famly/adapter/sms/twillo"
+	middleware "github.com/pawannn/famly/middleware"
+	httpEngine "github.com/pawannn/famly/pkg/httpEnginer"
+	databasePort "github.com/pawannn/famly/port/database"
+	metadbPort "github.com/pawannn/famly/port/metadb"
+	"github.com/pawannn/famly/port/sms"
 )
 
 type User struct {
-	FE            httpEngine.FamLinkEngine
+	FE            httpEngine.FamlyEngine
 	UserRepo      *databasePort.UserDBport
 	UserCacheRepo metadbPort.UserCachePort
 	UserSmsRepo   sms.UserSmsPort
 }
 
-func InitUserRepo(fE httpEngine.FamLinkEngine) *User {
+func InitUserRepo(fE httpEngine.FamlyEngine) *User {
 	// Initialize user Cache service
 	userCacheService := metadbAdapter.InitUserCacheRepo(fE.MetaDB)
 	userCacheRepo := metadbPort.InitUserCachePort(userCacheService)
@@ -41,7 +41,7 @@ func InitUserRepo(fE httpEngine.FamLinkEngine) *User {
 }
 
 func (u *User) InitUserRoutes() {
-	u.FE.AddRoute([]httpEngine.FamLinkRoute{
+	u.FE.AddRoute([]httpEngine.FamlyRoute{
 		{
 			Route:       "/user/phone/validate",
 			Method:      "POST",

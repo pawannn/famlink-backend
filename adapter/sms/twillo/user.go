@@ -1,6 +1,6 @@
 package sms
 
-import "github.com/pawannn/famlink/core/services/sms"
+import "github.com/pawannn/famly/core/services/sms"
 
 type UserSmsRepo struct {
 	SmsClient sms.SmsService

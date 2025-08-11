@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"time"
 
-	domain "github.com/pawannn/famlink/core/domain/users"
-	metadb "github.com/pawannn/famlink/core/services/metaDB"
-	"github.com/pawannn/famlink/pkg/constants"
+	domain "github.com/pawannn/famly/core/domain/users"
+	metadb "github.com/pawannn/famly/core/services/metaDB"
+	"github.com/pawannn/famly/pkg/constants"
 )
 
 type UserMetaDBRepo struct {

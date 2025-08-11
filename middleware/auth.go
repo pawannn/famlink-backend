@@ -4,8 +4,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/pawannn/famlink/api"
-	port "github.com/pawannn/famlink/port/token"
+	"github.com/pawannn/famly/api"
+	port "github.com/pawannn/famly/port/token"
 )
 
 func Auth(tokenService *port.TokenPort) gin.HandlerFunc {

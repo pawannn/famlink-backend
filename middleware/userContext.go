@@ -3,7 +3,7 @@ package middleware
 import (
 	"context"
 
-	"github.com/pawannn/famlink/pkg/constants"
+	"github.com/pawannn/famly/pkg/constants"
 )
 
 type UserContext struct {

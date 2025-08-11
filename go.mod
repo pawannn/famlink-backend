@@ -1,4 +1,4 @@
-module github.com/pawannn/famlink
+module github.com/pawannn/famly
 
 go 1.24.1
 

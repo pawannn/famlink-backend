@@ -5,7 +5,7 @@ import (
 	"fmt"
 
 	_ "github.com/lib/pq"
-	appconfig "github.com/pawannn/famlink/pkg/appConfig"
+	appconfig "github.com/pawannn/famly/pkg/appConfig"
 )
 
 func InitDatabase(c appconfig.Config) (*sql.DB, error) {
