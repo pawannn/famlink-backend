@@ -3,14 +3,14 @@ package main
 import (
 	"log"
 
-	database "github.com/pawannn/famly/adapter/database/postgres"
-	cache "github.com/pawannn/famly/adapter/metadb/redis"
-	sms "github.com/pawannn/famly/adapter/sms/twillo"
-	token "github.com/pawannn/famly/adapter/token/jwt"
-	userApi "github.com/pawannn/famly/api/user"
-	appconfig "github.com/pawannn/famly/pkg/appConfig"
-	httpEngine "github.com/pawannn/famly/pkg/httpEnginer"
-	port "github.com/pawannn/famly/port/token"
+	database "github.com/pawannn/famly/internal/adapter/database/postgres"
+	metadb "github.com/pawannn/famly/internal/adapter/metadb/redis"
+	sms "github.com/pawannn/famly/internal/adapter/sms/twillo"
+	auth "github.com/pawannn/famly/internal/adapter/token/jwt"
+	"github.com/pawannn/famly/internal/api/user"
+	"github.com/pawannn/famly/internal/core/services"
+	appconfig "github.com/pawannn/famly/internal/pkg/appConfig"
+	httpEngine "github.com/pawannn/famly/internal/pkg/httpEnginer"
 )
 
 func main() {
@@ -26,20 +26,22 @@ func main() {
 	defer db.Close()
 
 	// Intiialize MetaDB
-	rds := cache.InitCacheRepo(c)
+	rds := metadb.InitRedisRepo(c)
+	metadbManager := services.NewMetaDBManager(rds)
 
 	// Initialize token service
-	ts := token.InitTokenService(c)
-	tokenRepo := port.InitTokenPort(ts)
+	jtS := auth.InitJwtService(c)
+	AuthManager := services.InitAuthManager(jtS)
 
 	// Initialize sms service
-	sms := sms.InitTwilloClient(c)
+	tS := sms.InitTwilloClient(c)
+	smsManager := services.InitSmsManager(tS)
 
 	// Initialize the HTPP engine
-	famlyEngine := httpEngine.InitfamlyEngine(c, db, *tokenRepo, rds, sms)
+	famlyEngine := httpEngine.InitfamlyEngine(c, db, *AuthManager, metadbManager, smsManager)
 
 	// Initialize the user Repo
-	userRoutes := userApi.InitUserRepo(*famlyEngine)
+	userRoutes := user.InitUserRepo(*famlyEngine)
 
 	// Add User Routes
 	userRoutes.InitUserRoutes()
